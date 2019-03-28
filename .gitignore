@@ -1,0 +1,6 @@
+# Qt Creator user configs
+*.user
+
+# Build directories
+build*
+
