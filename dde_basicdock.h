@@ -19,7 +19,7 @@ public:
     bool enabled();                     // 返回插件的可用状态
     void setEnabled(const bool b);      // 设置插件的可用状态
 
-    QString text;               // 在插件上显示的文字
+    QString text;                       // 在插件上显示的文字
 
 private:
     // 以下的三个方法继承于QWidget，由Qt自动执行
