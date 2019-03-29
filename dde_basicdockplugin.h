@@ -19,6 +19,8 @@
 #include "dde-dock/pluginsiteminterface.h"      // DDE Dock的头文件
 #include "dde_basicdock.h"          // 插件本体的头文件。一般把Dock接口与插件本体分开，各成一个class。
 #include <QLabel>
+#include <QTimer>                   // 使用计时器对插件UI进行动态更新
+#include <qrandom.h>                // 用于生成随机数
 
 class DDE_BasicDockPlugin : public QObject, PluginsItemInterface
 {
@@ -52,10 +54,17 @@ private:
     QPointer<DDE_BasicDock> m_widgetMainUI;     // 指向插件本体的指针
     QPointer<QLabel> m_tipsLabel;               // 指向悬停提示本体的指针
     QSettings m_settings;                       // 设置模块。QSettings是Qt提供的应用程序设置管理模块
+    QTimer *m_refreshTimer;                     // 用于刷新插件UI的计时器
+
+    QRandomGenerator *randomGen;                // 随机数生成器，UI测试时使用
 
     // 上下文菜单点击后执行的动作。在本例中均为显示一个窗口（或对话框）
     void about();
     void helloWorld();
+
+/* 使用槽函数来实现插件更新 */
+private slots:
+    void updateBasicDock();
 };
 
 #endif // DDE_BASICDOCKPLUGIN_H

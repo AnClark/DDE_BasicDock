@@ -5,8 +5,13 @@
 #-------------------------------------------------
 
 QT       += widgets
+QT       += core            # 随机数生成器需要。不加入此库，则永远只能得到固定的数，即使头文件里引入了qrandom.h
 
-QT       -= gui
+# 加入此项配置，以使得编译的库能作为插件被加载
+# 若缺少，则dde-dock会提示：
+# load plugin failed!!! "无法加载库/usr/lib/dde-dock/plugins/libDDE_BasicDock.so：(/usr/lib/dde-dock/plugins/libDDE_BasicDock.so: undefined symbol: _ZTV13DDE_BasicDock)" "/usr/lib/dde-dock/plugins/libDDE_BasicDock.so"
+# 其余细节参见dde_basicdock.h。
+CONFIG   += plugin
 
 TARGET = DDE_BasicDock
 TEMPLATE = lib

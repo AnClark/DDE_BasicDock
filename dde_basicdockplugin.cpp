@@ -8,8 +8,11 @@
 
 DDE_BasicDockPlugin::DDE_BasicDockPlugin(QObject *parent)
     : QObject(parent),
-      m_tipsLabel(new QLabel),      // 这行属于初始化类的成员，而非继承
-      m_settings("deepin", "DDEBasicDock")
+      // 以下几行属于初始化类的成员，而非继承
+      m_tipsLabel(new QLabel),                   // 初始化悬停提示标签
+      m_settings("deepin", "DDEBasicDock"),      // 初始化设置模块
+      m_refreshTimer(new QTimer(this)),          // 初始化计时器
+      randomGen(new QRandomGenerator())          // 初始化随机数生成器
 {
     /* 定义悬停提示标签的格式 */
     m_tipsLabel->setObjectName("basicdock");        // 对象名
@@ -17,6 +20,17 @@ DDE_BasicDockPlugin::DDE_BasicDockPlugin(QObject *parent)
 
     /* 创建插件本体的新实例 */
     m_widgetMainUI = new DDE_BasicDock;
+
+    /* 配置计时器 */
+    m_refreshTimer->setInterval(1000);          // 确定UI的刷新间隔
+    m_refreshTimer->start();                    // 使计时器生效
+
+    /* 信号与槽的连接 */
+    // 将计时器的计时信号与UI更新函数的槽连接起来，如此就能在计时器工作时自动更新UI了
+    connect(m_refreshTimer, &QTimer::timeout, this, &DDE_BasicDockPlugin::updateBasicDock);
+    // 插件本体请求更新的信号，与dde-dock的协议（proxy）连接。
+    // 但实际上，没有此连接，插件UI也能照常更新。
+    //connect(m_widgetMainUI, &DDE_BasicDock::requestUpdateGeometry, [this] { m_proxyInter->itemUpdate(this, pluginName()); });
 }
 
 /* 设置插件的名称 */
@@ -179,4 +193,15 @@ void DDE_BasicDockPlugin::helloWorld()
 {
     QMessageBox helloWorldMB(QMessageBox::Information, "Hello World!", "你好，Deepin DDE Dock！");
     helloWorldMB.exec();
+}
+
+/* 刷新插件UI */
+// 本插件将示范：
+// ①在插件本体上显示随机数
+// ②在插件悬停提示中显示另外一个随机数
+void DDE_BasicDockPlugin::updateBasicDock()
+{
+    m_widgetMainUI->text = QString::number(randomGen->generate());
+    m_widgetMainUI->update();
+    m_tipsLabel->setText("随机数使用高端的QRandomGenerator生成！\n当前随机数：" + QString::number(randomGen->generate()));
 }
