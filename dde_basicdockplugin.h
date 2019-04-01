@@ -71,7 +71,8 @@ private:
 
 /* 使用槽函数来实现插件更新 */
 private slots:
-    void updateBasicDock();
+    void updateBasicDock();         // 更新插件UI
+
 };
 
 #endif // DDE_BASICDOCKPLUGIN_H

@@ -1,11 +1,11 @@
 #include "dde_basicdockplugin.h"
-#include "dde_basicdockpopup.h"
 
 #include <QLabel>
 #include <QWidget>
 #include <QPushButton>
 #include <QMessageBox>
 #include <QApplication>
+
 
 DDE_BasicDockPlugin::DDE_BasicDockPlugin(QObject *parent)
     : QObject(parent),
@@ -31,7 +31,9 @@ DDE_BasicDockPlugin::DDE_BasicDockPlugin(QObject *parent)
 
     /* 信号与槽的连接 */
     // 将计时器的计时信号与UI更新函数的槽连接起来，如此就能在计时器工作时自动更新UI了
+    // 注意第三个参数——上下文——要设置正确，否则会出现编译错误，且你也不能在Qt的IntelliSense中找到槽所在的类！
     connect(m_refreshTimer, &QTimer::timeout, this, &DDE_BasicDockPlugin::updateBasicDock);
+    connect(m_refreshTimer, &QTimer::timeout, m_widgetPopupUI, &DDE_BasicDockPopup::updatePopupUI);
     // 插件本体请求更新的信号，与dde-dock的协议（proxy）连接。
     // 但实际上，没有此连接，插件UI也能照常更新。
     //connect(m_widgetMainUI, &DDE_BasicDock::requestUpdateGeometry, [this] { m_proxyInter->itemUpdate(this, pluginName()); });
@@ -216,3 +218,4 @@ void DDE_BasicDockPlugin::updateBasicDock()
     m_widgetMainUI->update();
     m_tipsLabel->setText("随机数使用高端的QRandomGenerator生成！\n当前随机数：" + QString::number(randomGen->generate()));
 }
+
