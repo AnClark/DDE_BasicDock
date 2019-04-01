@@ -31,11 +31,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         dde_basicdock.cpp \
-    dde_basicdockplugin.cpp
+    dde_basicdockplugin.cpp \
+    dde_basicdockpopup.cpp
 
 HEADERS += \
         dde_basicdock.h \
-    dde_basicdockplugin.h
+    dde_basicdockplugin.h \
+    dde_basicdockpopup.h
 
 unix {
     target.path = /usr/lib
@@ -47,3 +49,4 @@ RESOURCES += \
 
 DISTFILES += \
     basicDock.json
+

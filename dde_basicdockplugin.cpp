@@ -1,4 +1,5 @@
 #include "dde_basicdockplugin.h"
+#include "dde_basicdockpopup.h"
 
 #include <QLabel>
 #include <QWidget>
@@ -20,6 +21,9 @@ DDE_BasicDockPlugin::DDE_BasicDockPlugin(QObject *parent)
 
     /* 创建插件本体的新实例 */
     m_widgetMainUI = new DDE_BasicDock;
+
+    /* 创建插件弹出窗口本体的新实例 */
+    m_widgetPopupUI = new DDE_BasicDockPopup;
 
     /* 配置计时器 */
     m_refreshTimer->setInterval(1000);          // 确定UI的刷新间隔
@@ -102,6 +106,13 @@ QWidget *DDE_BasicDockPlugin::itemTipsWidget(const QString &itemKey)
 {
     Q_UNUSED(itemKey);
     return m_tipsLabel;
+}
+
+/* 返回弹出窗口本体对象 */
+QWidget *DDE_BasicDockPlugin::itemPopupApplet(const QString &itemKey)
+{
+    Q_UNUSED(itemKey);
+    return m_widgetPopupUI;
 }
 
 /* 指定插件点击运行的Shell命令，一般为空 */

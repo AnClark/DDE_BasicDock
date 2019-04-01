@@ -10,7 +10,7 @@ DDE_BasicDock::DDE_BasicDock(QWidget *parent)
     : QWidget(parent),
       m_settings("deepin", "DDEBasicDock")      // 初始化本插件的设置存储
 {
-    text = "000";
+    text = "请稍候...";
 }
 
 /* 返回插件可用状态 */

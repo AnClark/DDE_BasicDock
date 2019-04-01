@@ -17,7 +17,11 @@
 #define DDE_BASICDOCKPLUGIN_H
 
 #include "dde-dock/pluginsiteminterface.h"      // DDE Dock的头文件
-#include "dde_basicdock.h"          // 插件本体的头文件。一般把Dock接口与插件本体分开，各成一个class。
+
+// 引入插件UI本体的头文件。一般把Dock接口与插件本体分开，各成一个class。
+#include "dde_basicdock.h"          // 插件本体的头文件
+#include "dde_basicdockpopup.h"     // 插件弹出窗口的头文件
+
 #include <QLabel>
 #include <QTimer>                   // 使用计时器对插件UI进行动态更新
 #include <qrandom.h>                // 用于生成随机数
@@ -42,8 +46,10 @@ public:
     int itemSortKey(const QString &itemKey);
     void setSortKey(const QString &itemKey, const int order);
 
+    // 以下三个方法将把相应的UI提供给dde-dock以便显示
     QWidget *itemWidget(const QString &itemKey) override;       // 插件UI的本体
     QWidget *itemTipsWidget(const QString &itemKey) override;   // 插件悬停提示UI的本体
+    QWidget *itemPopupApplet(const QString &itemKey) override;  // 插件弹出窗口UI的本体
 
     const QString itemCommand(const QString &itemKey) override; // 点击插件执行的Shell命令，一般不需要，返回空字符串即可
     const QString itemContextMenu(const QString &itemKey) override;     // 定义插件的上下文菜单（即右键菜单）
@@ -51,12 +57,13 @@ public:
     void invokedMenuItem(const QString &itemKey, const QString &menuId, const bool checked) override;   // 定义点击插件菜单项的事件，类似于Android部件的OnClick
 
 private:
-    QPointer<DDE_BasicDock> m_widgetMainUI;     // 指向插件本体的指针
-    QPointer<QLabel> m_tipsLabel;               // 指向悬停提示本体的指针
-    QSettings m_settings;                       // 设置模块。QSettings是Qt提供的应用程序设置管理模块
-    QTimer *m_refreshTimer;                     // 用于刷新插件UI的计时器
+    QPointer<DDE_BasicDock> m_widgetMainUI;             // 指向插件本体的指针
+    QPointer<QLabel> m_tipsLabel;                       // 指向悬停提示本体的指针
+    QPointer<DDE_BasicDockPopup> m_widgetPopupUI;       // 指向弹出窗口本体的指针
+    QSettings m_settings;                               // 设置模块。QSettings是Qt提供的应用程序设置管理模块
+    QTimer *m_refreshTimer;                             // 用于刷新插件UI的计时器
 
-    QRandomGenerator *randomGen;                // 随机数生成器，UI测试时使用
+    QRandomGenerator *randomGen;                        // 随机数生成器，UI测试时使用
 
     // 上下文菜单点击后执行的动作。在本例中均为显示一个窗口（或对话框）
     void about();
